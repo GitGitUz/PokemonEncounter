@@ -14,10 +14,6 @@ public enum TileType {
 	}
 	
 	int getBaseEncounterRate() {
-		return baseEncounterRate;
-	}
-	
-	String getType() {
-		return this.toString();
+		return this.baseEncounterRate;
 	}
 }

@@ -74,29 +74,33 @@ public class Board {
 	public void printDijkstra(Map<Integer, Tile> tilesList, int[] prev, double[] prob, int source) {
 		System.out.println("Dijkstra with Paths");
 		for(int i = 0; i < T; i++) {
-			System.out.print(source + "-->" + i + ": Encounter Chance = " + probToPercent(prob[i]) + "% Best Path: ");
-			printPath(prev, i);
+			System.out.print(source +"("+ tilesList.get(source) + ") -->" + i + " ("+ tilesList.get(i) + ") : Encounter Chance = " + probToPercent(prob[i]) + "% Best Path: ");
+			printPath(tilesList, prev, i);
 			System.out.println();
 		}
 	}
 	
-	public void printPath(int[] prev, int dest) {
+	public void printPath(Map<Integer, Tile> tilesList, int[] prev, int dest) {
 		if(prev[dest] == -1) {
-			System.out.print(dest+" ");
+			System.out.print(dest + "(" + tilesList.get(dest) + ") " );
 			return;
 		}
-		printPath(prev, prev[dest]);
-		System.out.print(dest  + " ");
+		printPath(tilesList, prev, prev[dest]);
+		System.out.print(dest + "(" + tilesList.get(dest) + ") " );
 	}
 	
-	public String probToPercent(double prob) {
-		double percent = 0.0;
-		if(prob == 0.0) {
-			return "0";
+	public double probToPercent(double prob) {
+		double percent = 0;
+		if(prob == 0) {
+			return percent;
 		}else {
 			percent = ((Math.pow(10.00, -prob)-1) * -100);
 		}
-		return df.format(percent);
+		return Math.round(percent*100.0)/100.0;
+	}
+	
+	public static String getRandomTile() {
+		return TileType.values()[new Random().nextInt(TileType.values().length)].toString();
 	}
 	
 	public static void main(String[] args) {
@@ -109,13 +113,10 @@ public class Board {
 		for(int i = 0; i < T; i++) {
 			List<Tile> tile = new ArrayList<Tile>();
 			tile_AdjList.add(tile);
-			//encounterBoard.tilesList.put(i, new Tile(i, "?" )); // generate random terrain out of set of available tiles
+			// generate random terrain out of set of available tile types
+			encounterBoard.tilesList.put(i, new Tile(i, getRandomTile())); 
 		}
-		
-		Tile source = new Tile(8, "SHORTGRASS");
-		//Tile source = encounterBoard.tilesList.get(2); 2 should be a random number i in [0-T]
-
-		
+	
 		//this will change to retrieving from map instead of new Tile()
 		tile_AdjList.get(0).add(new Tile(1, "DESERTSAND"));
 		tile_AdjList.get(0).add(new Tile(3, "SHORTGRASS"));
@@ -150,9 +151,13 @@ public class Board {
 		tile_AdjList.get(8).add(new Tile(5, "ROUTE"));
 		tile_AdjList.get(8).add(new Tile(7, "DESERTSAND"));
 		
-		encounterBoard.dijsktra(tile_AdjList, source.getTileID());
+		Tile source = new Tile(6, "ROUTE");
+//		Tile source = encounterBoard.tilesList.get(new Random().nextInt(T-1);
 		
+		encounterBoard.dijsktra(tile_AdjList, source.getTileID());
 		encounterBoard.printDijkstra(encounterBoard.tilesList,encounterBoard.prev, encounterBoard.prob, source.getTileID());
+		
+//		System.out.println(encounterBoard.tilesList);
 
 	}
 }

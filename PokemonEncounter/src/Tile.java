@@ -41,7 +41,7 @@ public class Tile implements Comparator <Tile> {
 	}
 	
 	public String getTileType() {
-		return this.type.getType();
+		return this.type.toString();
 	}
 	
 	public void setTileType(String type) {
@@ -63,5 +63,12 @@ public class Tile implements Comparator <Tile> {
 			return 1;	
 		}
 		return 0;
+	}
+	
+	public String toString() {
+		return this.getTileType();
+	}
+	public static void main(String[] args) {
+	
 	}
 }
